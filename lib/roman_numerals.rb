@@ -5,42 +5,23 @@ class Fixnum
    # digit and skipping any digit with a value of zero. 
 
     if self >= 1000 
-      remainder = self % 1000
-      thousands = self / 1000
-      ("M" * thousands) + remainder.to_roman
-    elsif self >= 900 && self < 1000
-      remainder = self % 100
-      "CM" + remainder.to_roman
-    elsif self >= 500 && self < 900
-      remainder = self % 500
-      five_hundreds = self / 500
-      ("D" * five_hundreds) + remainder.to_roman
-    elsif self >= 400 && self < 500
-      remainder = self % 100
-      "CD" + remainder.to_roman
-    elsif self >= 100 && self < 400
-      remainder = self % 100
-      hundreds = self / 100
-      ("C" * hundreds) + remainder.to_roman
-    elsif self < 100 && self >= 90
-      remainder = self % 10
-      "XC" + remainder.to_roman
-    elsif self < 90 && self >= 50
-      remainder = self % 50
-      fifties = self / 50
-      ("L" * fifties) + remainder.to_roman
-    elsif self < 50 && self >= 40
-      remainder = self % 10
-      "XL" + remainder.to_roman
-    elsif self < 40 && self >= 10
-      remainder = self % 10
-      tens = self / 10
-      ("X" * tens) + remainder.to_roman
-    elsif self == 9
-      "IX"
-    elsif self < 9 && self > 5
-      remainder = self % 5
-      5.to_roman + ("I"*remainder ) 
+      ("M" * thousands(self)) + (remainder(self, 1000)).to_roman
+    elsif self >= 500 && self < 1000
+      hundreds(self) == 9 ? "CM" + (remainder(self, 100)).to_roman : ("D" * five_hundreds(self)) + remainder(self, 500).to_roman
+    elsif self >= 100 && self < 500
+      hundreds(self) == 4 ? "CD" + remainder(self, 100).to_roman : ("C" * hundreds(self)) + remainder(self,100).to_roman
+    elsif self < 100 && self >= 50   
+      tens(self) == 9 ? "XC" + remainder(self, 10).to_roman : ("L" * fifties(self)) + remainder(self, 50).to_roman
+    elsif self < 50 && self > 10
+      tens(self) == 4 ? "XL" + remainder(self, 10).to_roman : ("X" * tens(self)) + remainder(self, 10).to_roman
+    elsif self < 10 && self >= 5
+      if remainder(self, 5) == 4
+        "IX"
+      elsif remainder(self, 5) == 0
+        "V"
+      else
+        "V" + remainder(self, 5).to_roman
+      end
     elsif self == 5
       "V"
     elsif self == 4
@@ -49,5 +30,29 @@ class Fixnum
       "I" * self 
     end
       
+  end
+
+  def remainder(num, divisor)
+    num % divisor
+  end
+
+  def thousands(num)
+    num / 1000
+  end
+
+  def five_hundreds(num)
+    num / 500
+  end
+
+  def hundreds(num)
+    num / 100
+  end
+
+  def fifties(num)
+    num / 50
+  end
+
+  def tens(num)
+    num / 10
   end
 end
